@@ -4,14 +4,17 @@ const app = express();
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const user_model = require('../models/user_model')
+const blog = require('./blog');
+
 app.use(express.urlencoded({ extended: false}));
-app.set('view-engine', 'ejs');
+app.set('view-engine', 'html');
+app.use('/blog', blog);
 
 
 
 
 router.get('/register', (req, res) => {
-    res.render('register.ejs')
+    res.sendFile('register.html', { root: 'views' })
 });
 
 
@@ -37,7 +40,7 @@ router.post('/register', async (req, res) => {
             }
 
             createUser();
-            // res.redirect('/')
+            res.redirect('/blog/home')
         }
 
     }catch {
@@ -56,7 +59,7 @@ router.post('/login', async (req, res) => {
      const user = await User.findOne({email: req.body.email});
      if (user) {
         if (await bcrypt.compare(req.body.password, user.password)) {
-            res.redirect('/')
+            res.redirect('/blog/home')
         }
      }
         
