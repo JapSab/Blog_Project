@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 var mongoose = require('mongoose');
+
+//models
 const user = require('./routes/user');
 const blog = require('./routes/blog');
-
-// const home = require('./r')
 const user_model = require('./models/user_model')
+
+
+
+
 app.use(express.urlencoded({ extended: false}));
 app.set('view-engine', 'ejs');
 
