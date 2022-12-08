@@ -1,19 +1,29 @@
 const express = require('express');
-const router = express.Router()
+const config = require('config');
+const dotenv = require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const router = express.Router();
 const app = express();
-const bcrypt = require('bcrypt')
-const mongoose = require('mongoose')
-const user_model = require('../models/user_model')
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const user_model = require('../models/user_model');
 const blog = require('./blog');
-const Joi = require('joi')
+const Joi = require('joi');
+const checkAuth = require('../middleware/check-auth');
+const auth = require('../middleware/check-auth');
 app.use(express.urlencoded({ extended: false}));
 app.set('view-engine', 'html');
 app.use('/blog', blog);
 
 
 
+router.get('/', async (req, res) => {
+   
+   res.sendFile('index.html', { root: 'views' }) 
+});
 
-router.get('/register', (req, res) => {
+
+router.get('/register', async (req, res) => {
     res.sendFile('register.html', { root: 'views' }) 
 });
 
@@ -33,13 +43,18 @@ router.post('/register', async (req, res) => {
     user.password = await bcrypt.hash(user.password, salt);
 
    await user.save();
-   res.redirect('/blog/home')
 
+   
+   const token = user.generateAuthToken();
+   res.cookie('token', token, {
+      httpOnly: true
+   }).redirect('/blog/home');
+     
 });
 
 
 router.get('/login', async (req, res) => {
-    res.render('login.ejs')
+    res.sendFile('login.html', { root: 'views' }) 
 });
 
 router.post('/login', async (req, res) => {
@@ -49,10 +64,19 @@ router.post('/login', async (req, res) => {
 
    const validPassword = await bcrypt.compare(req.body.password, user.password);
    if (!validPassword) return res.status(400).send('Invalid email or password')
-   
-   
 
-   res.redirect('/blog/home')
+
+   const token = user.generateAuthToken();
+   
+   // res.header('x-auth-token', token).redirect('/blog/home');
+
+
+
+   // res.redirect('/blog/home')
+
+   res.cookie('token', token, {
+      httpOnly: true
+   }).redirect('/blog/home');
     
 
    
