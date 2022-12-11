@@ -1,4 +1,5 @@
 const config = require('config');
+const { boolean } = require('joi');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -32,18 +33,20 @@ const userSchema = new Schema( {
         maxlength: 1024
     },
 
+    isAdmin: Boolean
 
 });
 
 userSchema.methods.generateAuthToken = function() {
     const token = jwt.sign({
         email: this.email,
-        userId: this._id
+        userId: this._id,
+        isAdmin: this.isAdmin
      }, 
         process.env.JWT_KEY
      ,
      {
-        expiresIn:"5s"
+        expiresIn:"15m"
      });
 
     return token
