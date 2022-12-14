@@ -2,6 +2,7 @@ const config = require('config');
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
+const methodOverride = require('method-override');
 var mongoose = require('mongoose');
 
 //models
@@ -13,7 +14,9 @@ const cookieParser = require('cookie-parser');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false}));
 app.use(cookieParser());
-app.set('view-engine', 'ejs');
+app.use(methodOverride('_method'));
+
+app.set('view engine', 'ejs');
 
 app.use('/blog', blog);
 app.use('/user', user);

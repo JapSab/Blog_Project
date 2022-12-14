@@ -19,12 +19,12 @@ app.use('/blog', blog);
 
 router.get('/', async (req, res) => {
    
-   res.sendFile('index.html', { root: 'views' }) 
+   res.render('index') 
 });
 
 
 router.get('/register', async (req, res) => {
-    res.sendFile('register.html', { root: 'views' }) 
+    res.render('register') 
 });
 
 
@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/login', async (req, res) => {
-    res.sendFile('login.html', { root: 'views' }) 
+    res.render('login') 
 });
 
 router.post('/login', async (req, res) => {
