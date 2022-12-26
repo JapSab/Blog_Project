@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
 const methodOverride = require('method-override');
+const path = require('path')
 var mongoose = require('mongoose');
 
 //models
@@ -20,7 +21,7 @@ app.set('view engine', 'ejs');
 
 app.use('/blog', blog);
 app.use('/user', user);
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 mongoose.connect('mongodb://localhost/project_db') 
