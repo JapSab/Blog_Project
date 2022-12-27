@@ -67,13 +67,6 @@ router.post('/login', async (req, res) => {
 
 
    const token = user.generateAuthToken();
-   
-   // res.header('x-auth-token', token).redirect('/blog/home');
-
-
-
-   // res.redirect('/blog/home')
-
    res.cookie('token', token, {
       httpOnly: true
    }).redirect('/blog/home');
